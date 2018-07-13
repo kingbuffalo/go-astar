@@ -1,6 +1,8 @@
 package astar
 
-import "container/heap"
+import (
+	"container/heap"
+)
 
 // astar is an A* pathfinding implementation.
 
@@ -15,6 +17,7 @@ type Pather interface {
 	// PathEstimatedCost is a heuristic method for estimating movement costs
 	// between non-adjacent nodes.
 	PathEstimatedCost(to Pather) float64
+	BSamePoint(other Pather) bool
 }
 
 // node is a wrapper to store A* data for a Pather node.
@@ -62,8 +65,7 @@ func Path(from, to Pather) (path []Pather, distance float64, found bool) {
 		current.open = false
 		current.closed = true
 
-		if current == nm.get(to) {
-			// Found a path to the goal.
+		if current.pather.BSamePoint(to) {
 			p := []Pather{}
 			curr := current
 			for curr != nil {

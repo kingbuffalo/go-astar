@@ -92,6 +92,11 @@ func (t *Tile) PathNeighborCost(to Pather) float64 {
 	return KindCosts[toT.Kind]
 }
 
+func (t *Tile) BSamePoint(to Pather) bool {
+	toT := to.(*Tile)
+	return toT.X == t.X && t.Y == toT.Y
+}
+
 // PathEstimatedCost uses Manhattan distance to estimate orthogonal distance
 // between non-adjacent nodes.
 func (t *Tile) PathEstimatedCost(to Pather) float64 {

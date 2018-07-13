@@ -1,8 +1,8 @@
 package astar
 
-//import (
-//"sync"
-//)
+import (
+	"fmt"
+)
 
 // Kind* constants refer to EDTile kinds for input and output.
 const (
@@ -51,6 +51,10 @@ type EDTile struct {
 	W EDWorld
 }
 
+func (t *EDTile) Print() {
+	fmt.Print("(", t.X, ",", t.Y, ")", "=", t.Kind, "  ")
+}
+
 // PathNeighbors returns the neighbors of the EDTile, excluding blockers and
 // tiles off the edge of the board.
 func (t *EDTile) PathNeighbors() []Pather {
@@ -73,7 +77,13 @@ func (t *EDTile) PathNeighbors() []Pather {
 	return neighbors
 }
 
+func (t *EDTile) BSamePoint(to Pather) bool {
+	toT := to.(*EDTile)
+	return t.X == toT.X && t.Y == toT.Y
+}
+
 // PathNeighborCost returns the movement cost of the directly neighboring EDTile.
+
 func (t *EDTile) PathNeighborCost(to Pather) float64 {
 	toT := to.(*EDTile)
 	cost := EDKindCosts[toT.Kind]
@@ -139,6 +149,7 @@ func (w EDWorld) SetTile(bBloc bool, x, y int) {
 }
 
 func (w EDWorld) Distance(fromx, fromy, tox, toy int) (float64, bool) {
+	fmt.Println("Distance", fromx, fromy, tox, toy)
 	from := &EDTile{
 		Kind: EDKindPlain,
 		X:    fromx,
@@ -154,4 +165,27 @@ func (w EDWorld) Distance(fromx, fromy, tox, toy int) (float64, bool) {
 
 	_, d, f := Path(from, to)
 	return d, f
+}
+
+func (w EDWorld) Print() {
+	//hLen := 62
+	//wLen := 38
+	//for i := 0; i < hLen; i++ {
+	//for j := 0; j < wLen; j++ {
+	//edt := w.EDTile(j, i)
+	//if edt == nil {
+	//fmt.Errorf("nil=%d,%d", j, i)
+	//}
+	////fmt.Print(edt.Kind)
+	//fmt.Print("(", j, ",", i, ")")
+	//}
+	//fmt.Print("\n")
+	//}
+
+	for x, v := range w {
+		for y, vv := range v {
+			fmt.Print("(", x, ",", y, ")", "=", vv.Kind, "  ")
+		}
+		fmt.Print("\n")
+	}
 }
